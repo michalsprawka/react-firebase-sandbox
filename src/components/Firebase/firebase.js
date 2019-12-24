@@ -96,6 +96,8 @@ class Firebase {
 
   user = uid => this.db.ref(`users/${uid}`);
 
+  userName = uid => this.db.ref(`users/${uid}/username`)
+
   users = () => this.db.ref('users');
 
   // *** Message API ***

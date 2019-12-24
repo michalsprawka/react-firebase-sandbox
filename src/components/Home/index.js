@@ -14,7 +14,7 @@ class HomePage extends Component {
     text: '',
     users: [],
     loading: false,
-    limit: 5,
+    limit: 15,
     messages: []
   }
 
@@ -36,7 +36,7 @@ class HomePage extends Component {
           const messagesList = Object.keys(messagesObject).map(key => ({
             ...messagesObject[key],
             uid: key,
-          }));
+          })).reverse();
           console.log("messagesList:  ", messagesList);
           this.setState({
             messages: messagesList,
