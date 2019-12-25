@@ -75,6 +75,7 @@ class HomePage extends Component {
   };
   componentWillUnmount() {
     this.props.firebase.users().off();
+    this.props.firebase.messages().off();
   }
   handleDetail = (id) => {
     this.props.history.push(`/detail/${id}`);
@@ -122,7 +123,7 @@ class HomePage extends Component {
                   pathname:`/detail/${message.uid}`,
                   message
                   
-                  }}>{message.uid}</Link>
+                  }}>{message.text}</Link>
                 
                 {message.comments && <ul>
                   {Object.keys(message.comments).map(comment => <li key={comment}> 
