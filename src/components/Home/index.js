@@ -100,6 +100,10 @@ class HomePage extends Component {
     console.log("New Key: ", newKey.key);
   }
 
+  onRemoveMessage = id => {
+    this.props.firebase.message(id).remove();
+  }
+
   render() {
     const { users, messages, text } = this.state
    // console.log(this.props);
@@ -124,6 +128,7 @@ class HomePage extends Component {
                   message
                   
                   }}>{message.text}</Link>
+                  {(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) && <span><button onClick={()=>this.onRemoveMessage(message.uid)}>Delete</button></span>}
                 
                 {message.comments && <ul>
                   {Object.keys(message.comments).map(comment => <li key={comment}> 

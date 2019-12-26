@@ -7,7 +7,7 @@ import {
   withEmailVerification
 } from "../Session";
 import { withFirebase } from "../Firebase";
-import { auth } from "firebase";
+
 
 class DetailPage extends Component {
   state = {
@@ -57,6 +57,10 @@ class DetailPage extends Component {
 
    
   }
+  onRemoveComment = id => {
+    console.log(id);
+    this.props.firebase.comment(this.props.match.params.id,id).remove();
+  }
   render() {
     //  console.log("props in detail: ", this.props.location.message)
     const { message, username, addedComment } = this.state;
@@ -80,7 +84,8 @@ class DetailPage extends Component {
                         {message.comments[comment].body}{" "}
                         {new Date(
                           message.comments[comment].createdAt
-                        ).toDateString()}
+                        ).toDateString()}{" "}{(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) && 
+                        <span><button onClick={()=>this.onRemoveComment(comment)}>Delete</button></span>}
                       </li>
                     ))}
                   </ul>
