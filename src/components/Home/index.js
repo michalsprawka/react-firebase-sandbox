@@ -15,7 +15,9 @@ class HomePage extends Component {
     users: [],
     loading: false,
     limit: 15,
-    messages: []
+    messages: [],
+    editedMessage: "",
+    editedMessageID: ""
   }
 
   componentDidMount() {
@@ -85,6 +87,10 @@ class HomePage extends Component {
     this.setState({ text: event.target.value });
   }
 
+  onChangeEditedMessage = event => {
+    this.setState({ editedMessage: event.target.value });
+  }
+
   onCreateMessage =  (event, authUser) => {
     const newKey = this.props.firebase.messages().push({
       text: this.state.text,
@@ -100,12 +106,28 @@ class HomePage extends Component {
     console.log("New Key: ", newKey.key);
   }
 
+  onCreateEditMessage =(event)=> {
+    event.preventDefault();
+    const editedMessage = this.state.messages.find(element => element.uid===this.state.editedMessageID)
+    console.log("edited message: ", editedMessage);
+    this.props.firebase.message(this.state.editedMessageID).set({
+      ...editedMessage,
+     text: this.state.editedMessage,
+      editedAt: this.props.firebase.serverValue.TIMESTAMP,
+    });
+
+  }
+
   onRemoveMessage = id => {
     this.props.firebase.message(id).remove();
   }
 
+  onEditMessage =(id, text) => {
+    this.setState({ editedMessage: text, editedMessageID: id})
+  }
+
   render() {
-    const { users, messages, text } = this.state
+    const { users, messages, text, editedMessage } = this.state
    // console.log(this.props);
     return (
     
@@ -121,14 +143,16 @@ class HomePage extends Component {
               </li> )}
             </ul>
             <ul>
-              {messages.map(message => 
+              {messages.map((message,index) => 
               <li key={message.uid}>
                 <Link to={{
                   pathname:`/detail/${message.uid}`,
                   message
                   
                   }}>{message.text}</Link>
-                  {(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) && <span><button onClick={()=>this.onRemoveMessage(message.uid)}>Delete</button></span>}
+                  {(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) &&
+                  <span><button onClick={()=>this.onEditMessage(message.uid, message.text)}>Edit</button>
+                   <button onClick={()=>this.onRemoveMessage(message.uid)}>Delete</button></span>}
                 
                 {message.comments && <ul>
                   {Object.keys(message.comments).map(comment => <li key={comment}> 
@@ -139,6 +163,23 @@ class HomePage extends Component {
                   </li>
                 )}
             </ul>
+              {editedMessage && 
+              <>
+              <hr/>
+               <form
+              onSubmit={event =>
+                this.onCreateEditMessage(event)
+              }
+            >
+              <input
+                type="text"
+                value={editedMessage}
+                onChange={this.onChangeEditedMessage}
+              />
+              <button type="submit">Edit</button>
+            </form>
+              </>
+              }
             <hr/>
             <form
               onSubmit={event =>
