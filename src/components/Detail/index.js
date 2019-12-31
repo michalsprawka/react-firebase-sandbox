@@ -61,6 +61,19 @@ class DetailPage extends Component {
     console.log(id);
     this.props.firebase.comment(this.props.match.params.id,id).remove();
   }
+
+  handleLampOn = () => {
+    this.props.firebase.comment(this.props.match.params.id,"-LxMEPI-clzctUzlNTX3").update({
+      lamp: "ON"
+    });
+  }
+
+  handleLampOff = () => {
+    this.props.firebase.comment(this.props.match.params.id,"-LxMEPI-clzctUzlNTX3").update({
+      lamp: "OFF"
+    });
+  }
+
   render() {
     //  console.log("props in detail: ", this.props.location.message)
     const { message, username, addedComment } = this.state;
@@ -77,6 +90,12 @@ class DetailPage extends Component {
                   
                   Utworzone dnia: {new Date(message.createdAt).toDateString()}
                 </p>
+                {message.uid === "-LwnsU_BjlGG5_1tQ_VT" && 
+                <>
+                <p>Obecny stan lamp: {message.comments["-LxMEPI-clzctUzlNTX3"].lamp} </p>
+                <button onClick={this.handleLampOn}>Lamp On</button>
+                <button onClick={this.handleLampOff}>Lamp Off</button>
+                </>}
                 {message.comments ? (
                   <ul>
                     {Object.keys(message.comments).map(comment => (
