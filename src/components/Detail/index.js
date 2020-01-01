@@ -41,6 +41,10 @@ class DetailPage extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.firebase.comment(this.state.message.uid,"-LxMEPI-clzctUzlNTX3").off();
+  }
+
   getUsername = id => {
     this.props.firebase.userName(id).once("value", snapshot => {
       const username = snapshot.val();
