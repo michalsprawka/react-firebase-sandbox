@@ -14,20 +14,28 @@ class DetailPage extends Component {
     message: null,
     username: "",
     addedComment: "",
-    comments: []
+    comments: [],
+    sensorData: null
   };
   componentDidMount() {
     if (this.props.location.message) {
-      this.setState({ message: this.props.location.message }, () =>
-        this.getUsername(this.state.message.userId)
+      this.setState({ message: this.props.location.message }, () => {
+        this.getUsername(this.state.message.userId);
+        this.getSenorData();
+      }
+        
       );
     } else {
       this.props.firebase
         .message(this.props.match.params.id)
         .once("value", snapshot => {
           const messagesObject = snapshot.val();
-          this.setState({ message: messagesObject }, () =>
-            this.getUsername(this.state.message.userId)
+          this.setState({ message: messagesObject }, () => {
+            this.getUsername(this.state.message.userId);
+            this.getSenorData();
+
+          }
+           
           );
         });
     }
@@ -40,6 +48,16 @@ class DetailPage extends Component {
       console.log("USERNAME: ", username);
     });
   };
+
+  getSenorData = () => {
+    if(this.state.message.uid==="-LwnsU_BjlGG5_1tQ_VT"){
+      this.props.firebase.comment(this.state.message.uid,"-LxMEPI-clzctUzlNTX3")
+      .on('value', snapshot =>{
+        //console.log("Sensor snapshot: ", snapshot.val())
+        this.setState({ sensorData: snapshot.val() })
+      })
+    }
+  }
 
   onChangeComment = event => {
     this.setState({ addedComment: event.target.value });
@@ -76,7 +94,7 @@ class DetailPage extends Component {
 
   render() {
     //  console.log("props in detail: ", this.props.location.message)
-    const { message, username, addedComment } = this.state;
+    const { message, username, addedComment, sensorData } = this.state;
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -92,10 +110,22 @@ class DetailPage extends Component {
                 </p>
                 {message.uid === "-LwnsU_BjlGG5_1tQ_VT" && 
                 <>
+
                 <p>Obecny stan lamp: {message.comments["-LxMEPI-clzctUzlNTX3"].lamp} </p>
                 <button onClick={this.handleLampOn}>Lamp On</button>
                 <button onClick={this.handleLampOff}>Lamp Off</button>
                 </>}
+                { sensorData &&
+                  <ul>
+                  {Object.keys(sensorData).map(key =>
+                    <li key ={key}>
+                      {key}:{sensorData[key]}
+                    </li>
+
+                  )}
+                  </ul>
+
+                }
                 {message.comments ? (
                   <ul>
                     {Object.keys(message.comments).map(comment => (
