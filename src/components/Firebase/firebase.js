@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/storage';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -24,6 +25,8 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.database();
+    this.storage = app.storage();
+    this.storageRef = app.storage().ref()
 
     /* Social Sign In Method Provider */
 
@@ -109,6 +112,11 @@ class Firebase {
   comment = (uid, commentID) => this.db.ref(`messages/${uid}/comments/${commentID}`);
 
   comments = (uid) => this.db.ref(`messages/${uid}/comments`);
+
+ // *** Storage API ***
+     image = (imgName) => this.storageRef.child(`images/${imgName}`);
+     images = () => this.storageRef.child('images');
+
 }
 
 export default Firebase;

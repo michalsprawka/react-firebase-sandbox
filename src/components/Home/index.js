@@ -193,6 +193,11 @@ class HomePage extends Component {
               />
               <button type="submit">Send</button>
             </form>
+            <Link to={{
+                  pathname:`/image`,
+                 
+                  
+                  }}>IMAGE</Link>
           </>
           
           

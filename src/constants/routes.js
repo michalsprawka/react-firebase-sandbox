@@ -7,3 +7,5 @@ export const PASSWORD_FORGET = '/pw-forget';
 export const ADMIN = '/admin';
 export const ADMIN_DETAILS = '/admin/:id';
 export const DETAIL = '/detail/:id';
+export const IMAGE = '/image';
+
