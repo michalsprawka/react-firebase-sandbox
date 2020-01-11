@@ -80,7 +80,7 @@ class HomePage extends Component {
     this.props.firebase.messages().off();
   }
   handleDetail = (id) => {
-    this.props.history.push(`/detail/${id}`);
+   // this.props.history.push(`/detail/${id}`);
     console.log("id in handle detail: ", id);
   }
   onChangeText = event => {
