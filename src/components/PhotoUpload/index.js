@@ -10,7 +10,7 @@ import {
   withEmailVerification
 } from "../Session";
 import { withFirebase } from "../Firebase";
-
+import * as ROLES from '../../constants/roles';
 function MyDropzone(props) {
 
 
@@ -98,8 +98,9 @@ function MyDropzone(props) {
    
   );
 }
-
-const condition = authUser => !!authUser;
+const condition = authUser =>
+  authUser && authUser.roles.includes(ROLES.ADMIN);
+//const condition = authUser => !!authUser;
 export default compose(
   withFirebase,
   withEmailVerification,

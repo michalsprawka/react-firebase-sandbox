@@ -8,6 +8,8 @@ import {
 } from "../Session";
 import { withFirebase } from "../Firebase";
 
+import * as ROLES from '../../constants/roles';
+
 
 class DetailPage extends Component {
   state = {
@@ -163,7 +165,11 @@ class DetailPage extends Component {
   }
 }
 
-const condition = authUser => !!authUser;
+//const condition = authUser => !!authUser;
+
+
+const condition = authUser =>
+  authUser && authUser.roles.includes(ROLES.ADMIN);
 
 export default compose(
   withFirebase,
