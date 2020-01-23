@@ -98,8 +98,11 @@ function MyDropzone(props) {
    
   );
 }
-const condition = authUser =>
-  authUser && authUser.roles.includes(ROLES.ADMIN);
+// const condition = authUser =>
+//   authUser && authUser.roles.includes(ROLES.ADMIN);
+
+  const condition = authUser =>
+  authUser && authUser.isAdmin;
 //const condition = authUser => !!authUser;
 export default compose(
   withFirebase,

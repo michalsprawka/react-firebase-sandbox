@@ -1,3 +1,10 @@
+//TODO Utworzyć nową kolekcję users public  z danymi dostępnymi dla userów
+// lub wyrzucić maile z kolekcji users i ewentualnie utworzyć koleckcję
+// usersMail gdzie kluczem będzie id usera a dostęp na zasadzie 
+// "$uid === auth.uid || root.child('users/'+auth.uid).child('isAdmin').val() === true"
+
+
+
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -42,18 +49,19 @@ class SignUpFormBase extends Component {
     const { username, email, passwordOne, isAdmin } = this.state;
     const roles = [];
 
-    if (isAdmin) {
-      roles.push(ROLES.ADMIN);
-    }
+    // if (isAdmin) {
+    //   roles.push(ROLES.ADMIN);
+    // }
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         // Create a user in your Firebase realtime database
-        return this.props.firebase.user(authUser.user.uid).set({
+        return this.props.firebase.user(authUser.user.uid).set({ //tak się tworzy nowy element z określonym kluczem
           username,
           email,
           roles,
+          isAdmin
         });
       })
       .then(() => {

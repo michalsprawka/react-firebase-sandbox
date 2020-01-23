@@ -28,6 +28,7 @@ class HomePage extends Component {
   }
 
   onListenMessages = () => {
+   
     this.setState({ loading: true })
     this.props.firebase
     .messages()
@@ -35,6 +36,7 @@ class HomePage extends Component {
       .limitToLast(this.state.limit)
       .on('value', snapshot => {
         const messagesObject = snapshot.val();
+       
 
         if (messagesObject) {
           const messagesList = Object.keys(messagesObject).map(key => ({
@@ -53,6 +55,7 @@ class HomePage extends Component {
   }
 
   onListenForUsers = () => {
+    console.log("TEST");
     this.setState({ loading: true });
 
     this.props.firebase
@@ -61,6 +64,7 @@ class HomePage extends Component {
       .limitToLast(this.state.limit)
       .on('value', snapshot => {
         const usersObject = snapshot.val();
+        console.log("users obj", snapshot.val());
 
         if (usersObject) {
           const usersList = Object.keys(usersObject).map(key => ({
@@ -128,6 +132,11 @@ class HomePage extends Component {
     this.setState({ editedMessage: text, editedMessageID: id})
   }
 
+  onTest = (uid) => {
+    console.log("UID", uid)
+    this.props.firebase.user(uid).update( {isAdmin : true} );
+  }
+
   render() {
     const { users, messages, text, editedMessage } = this.state
    // console.log(this.props);
@@ -141,7 +150,7 @@ class HomePage extends Component {
             <ul>
               {users.map(user => 
               <li key={user.uid}>
-                <button type="link" onClick={() => this.handleDetail(user.uid)}>{user.email}</button>
+                <button type="link" onClick={() => this.handleDetail(user.uid)}>{user.username}</button>
               </li> )}
             </ul>
             <ul>
@@ -152,7 +161,7 @@ class HomePage extends Component {
                   message
                   
                   }}>{message.text}</Link>
-                  {(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) &&
+                  {(authUser.uid === message.userId || authUser.isAdmin) &&
                   <span><button onClick={()=>this.onEditMessage(message.uid, message.text)}>Edit</button>
                    <button onClick={()=>this.onRemoveMessage(message.uid)}>Delete</button></span>}
                 
@@ -200,6 +209,8 @@ class HomePage extends Component {
                  
                   
                   }}>IMAGE</Link>
+
+            {/* <button onClick={() => this.onTest("bpbZeqKaztMdLej75sgcZpOl7bF2")}>TEST</button> */}
           </>
           
           
@@ -216,11 +227,14 @@ class HomePage extends Component {
   }
 }
 
-//const condition = authUser => !!authUser;
+const condition = authUser => !!authUser;
 
 
-const condition = authUser =>
-  authUser && authUser.roles.includes(ROLES.ADMIN);
+// const condition = authUser =>
+//   authUser && authUser.roles.includes(ROLES.ADMIN);
+
+  // const condition = authUser =>
+  // authUser && authUser.isAdmin;
 
 export default compose(
   withFirebase,

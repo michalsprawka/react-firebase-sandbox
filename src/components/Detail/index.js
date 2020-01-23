@@ -139,7 +139,7 @@ class DetailPage extends Component {
                         {message.comments[comment].body}{" "}
                         {new Date(
                           message.comments[comment].createdAt
-                        ).toDateString()}{" "}{(authUser.uid === message.userId || authUser.roles.includes("ADMIN")) && 
+                        ).toDateString()}{" "}{(authUser.uid === message.userId || authUser.isAdmin) && 
                         <span><button onClick={()=>this.onRemoveComment(comment)}>Delete</button></span>}
                       </li>
                     ))}
@@ -168,8 +168,11 @@ class DetailPage extends Component {
 //const condition = authUser => !!authUser;
 
 
-const condition = authUser =>
-  authUser && authUser.roles.includes(ROLES.ADMIN);
+// const condition = authUser =>
+//   authUser && authUser.roles.includes(ROLES.ADMIN);
+
+  const condition = authUser =>
+  authUser && authUser.isAdmin;
 
 export default compose(
   withFirebase,
